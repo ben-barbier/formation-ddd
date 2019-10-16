@@ -11,17 +11,15 @@ export class ProductFamilySelection {
   private references: ProductReference[] = [];
 
   constructor(events: ProductFamilySelectionEvent[] = []) {
-    events.forEach(event => {
+    this.references = events.reduce((acc, event) => {
       if (event instanceof ProductSelected) {
-        this.references = this.references.concat(event.reference);
+        return acc.concat(event.reference);
       }
       if (event instanceof ProductUnselected) {
-        this.references = this.references.filter(other => !other.equals(event.reference));
+        return acc.filter(other => !other.equals(event.reference));
       }
-      if (event instanceof ProductFamilyDefined) {
-        // RAS
-      }
-    });
+      return acc;
+    }, []);
   }
 
   public select(command: SelectProduct) {
