@@ -5,38 +5,41 @@ import { UnselectProduct } from './commands/unselect-product';
 import { ProductUnselected } from './events/product-unselected';
 import { ProductFamilyDefined } from './events/product-family-defined';
 import { select, unselect, confirm } from './product-family-selection';
+import { FamilyId } from './family-id';
+import { Confirm } from './commands/confirm';
 
 describe('ProductFamilySelection', () => {
   it('should raise ProductSelected', () => {
     // Given
-    const selectProductCommand = new SelectProduct(new ProductReference('8380101'));
-    // const productFamilySelection = new ProductFamilySelection();
+    const family = new FamilyId('FamilleA');
+    const selectProductCommand = new SelectProduct(family, new ProductReference('8380101'));
 
     // When
     const triggeredEvents = select([], selectProductCommand);
 
     // Then
-    const expectedEvent = new ProductSelected(selectProductCommand.reference);
+    const expectedEvent = new ProductSelected(family, selectProductCommand.reference);
     expect(triggeredEvents[0]).toStrictEqual(expectedEvent);
   });
 
   it('should raise ProductUnselected', () => {
     // Given
-    const selectProductCommand = new SelectProduct(new ProductReference('8380101'));
+    const family = new FamilyId('FamilleA');
+    const selectProductCommand = new SelectProduct(family, new ProductReference('8380101'));
     const selectHistory = select([], selectProductCommand);
-    const unselectProductCommand = new UnselectProduct(new ProductReference('8380101'));
+    const unselectProductCommand = new UnselectProduct(family, new ProductReference('8380101'));
 
     // When
     const triggeredEvents = unselect(selectHistory)(unselectProductCommand);
 
     // Then
-    const expectedEvent = new ProductUnselected(unselectProductCommand.reference);
+    const expectedEvent = new ProductUnselected(family, unselectProductCommand.reference);
     expect(triggeredEvents[0]).toStrictEqual(expectedEvent);
   });
 
   it('should raise nothing if product is not in selection', () => {
     // Given
-    const unselectProductCommand = new UnselectProduct(new ProductReference('8380101'));
+    const unselectProductCommand = new UnselectProduct(new FamilyId('FamilleA'), new ProductReference('8380101'));
     const unselectWithHistory = unselect([]);
 
     // When
@@ -48,24 +51,26 @@ describe('ProductFamilySelection', () => {
 
   it('should raise ProductsFamilyDefined', () => {
     // Given
-    const selectProductCommand = new SelectProduct(new ProductReference('8380101'));
+    const family = new FamilyId('FamilleA');
+    const selectProductCommand = new SelectProduct(family, new ProductReference('8380101'));
     const selectHistory = select([], selectProductCommand);
 
     // When
-    const triggeredEvents = confirm(selectHistory);
+    const triggeredEvents = confirm(selectHistory, new Confirm(family));
 
     // Then
     const expectedEvent = new ProductFamilyDefined(
-      [selectProductCommand.reference],
+      family, [selectProductCommand.reference],
     );
     expect(triggeredEvents[0]).toStrictEqual(expectedEvent);
   });
 
   it('should not raise ProductsFamilyDefined if products is empty', () => {
     // Given
+    const family = new FamilyId('FamilleA');
 
     // When
-    const triggeredEvents = confirm([]);
+    const triggeredEvents = confirm([], new Confirm(family));
 
     // Then
     expect(triggeredEvents).toHaveLength(0);
@@ -73,19 +78,20 @@ describe('ProductFamilySelection', () => {
 
   it('should replay events', () => {
     // Given
+    const family = new FamilyId('FamilleA');
     const events = [
-      new ProductSelected(new ProductReference('8380101')),
-      new ProductSelected(new ProductReference('8380102')),
-      new ProductSelected(new ProductReference('8380103')),
-      new ProductUnselected(new ProductReference('8380102')),
-      new ProductUnselected(new ProductReference('8380104')),
+      new ProductSelected(family, new ProductReference('8380101')),
+      new ProductSelected(family, new ProductReference('8380102')),
+      new ProductSelected(family, new ProductReference('8380103')),
+      new ProductUnselected(family, new ProductReference('8380102')),
+      new ProductUnselected(family, new ProductReference('8380104')),
     ];
 
     // When
-    const triggeredEvents = confirm(events);
+    const triggeredEvents = confirm(events, new Confirm(family));
 
     // Then
-    const expectedEvent = new ProductFamilyDefined([
+    const expectedEvent = new ProductFamilyDefined(family, [
       new ProductReference('8380103'),
       new ProductReference('8380101'),
     ]);

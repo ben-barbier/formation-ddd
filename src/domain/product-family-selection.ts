@@ -5,24 +5,25 @@ import { ProductUnselected } from './events/product-unselected';
 import { ProductFamilyDefined } from './events/product-family-defined';
 import { ProductReference } from './product-reference';
 import { ProductFamilySelectionEvent } from './events/product-family-selection-event';
+import { Confirm } from './commands/confirm';
 
 export function select(history: ProductFamilySelectionEvent[], command: SelectProduct): ProductFamilySelectionEvent[] {
-  return [new ProductSelected(command.reference)];
+  return [new ProductSelected(command.familyId, command.reference)];
 }
 
 export const unselect = (history: ProductFamilySelectionEvent[]) => (command: UnselectProduct): ProductFamilySelectionEvent[] => {
   const events = [];
   const reference = command.reference;
   if (new DecisionProjection(history).hasAlreadySelected(reference)) {
-    events.push(new ProductUnselected(reference));
+    events.push(new ProductUnselected(command.familyId, reference));
   }
   return events;
 };
 
-export function confirm(history: ProductFamilySelectionEvent[]): ProductFamilySelectionEvent[] {
+export function confirm(history: ProductFamilySelectionEvent[], command: Confirm): ProductFamilySelectionEvent[] {
   const events = [];
   if (new DecisionProjection(history).references.length) {
-    events.push(new ProductFamilyDefined(new DecisionProjection(history).references));
+    events.push(new ProductFamilyDefined(command.familyId, new DecisionProjection(history).references));
   }
   return events;
 }
