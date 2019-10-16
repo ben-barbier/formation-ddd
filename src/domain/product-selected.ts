@@ -1,6 +1,6 @@
-import { Product } from './product';
+import { ProductReference } from './product-reference';
 
 export class ProductSelected {
-  constructor(public product: Product) {
+  constructor(public reference: ProductReference) {
   }
 }

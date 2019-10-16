@@ -1,6 +1,6 @@
-import { Product } from './product';
+import { ProductReference } from './product-reference';
 
 export class ProductFamilyDefined {
-  constructor(public products: Product[]) {
+  constructor(public references: ProductReference[]) {
   }
 }

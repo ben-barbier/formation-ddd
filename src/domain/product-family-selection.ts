@@ -1,33 +1,32 @@
 import { SelectProduct } from './in/select-product';
 import { ProductSelected } from './product-selected';
-import { Product } from './product';
 import { UnselectProduct } from './in/unselect-product';
 import { ProductUnselected } from './product-unselected';
-import { Confirm } from './confirm';
 import { ProductFamilyDefined } from './product-family-defined';
+import { ProductReference } from './product-reference';
 
 export class ProductFamilySelection {
 
-  private products: Product[] = [];
+  private references: ProductReference[] = [];
 
   public select(selectProductCommand: SelectProduct) {
-    const product = new Product(selectProductCommand.reference);
-    this.products = [...this.products, product];
-    return new ProductSelected(product);
+    const reference = selectProductCommand.reference;
+    this.references = this.references.concat(reference);
+    return new ProductSelected(reference);
   }
 
   public unselect(unselectProductCommand: UnselectProduct) {
-    const product = new Product(unselectProductCommand.reference);
+    const reference = unselectProductCommand.reference;
 
-    if (this.products.some(other => other.equals(product))) {
-      this.products = this.products.filter(other => !other.equals(product));
-      return new ProductUnselected(product);
+    if (this.references.some(other => other.equals(reference))) {
+      this.references = this.references.filter(other => !other.equals(reference));
+      return new ProductUnselected(reference);
     }
   }
 
   public confirm() {
-    if (this.products.length) {
-      return new ProductFamilyDefined(this.products);
+    if (this.references.length) {
+      return new ProductFamilyDefined(this.references);
     }
   }
 
