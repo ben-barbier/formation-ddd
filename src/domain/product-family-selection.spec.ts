@@ -1,5 +1,8 @@
 import { SelectProduct } from './in/select-product';
 import { ProductFamilySelection } from './product-family-selection';
+import { ProductSelected } from './product-selected';
+import { Product } from './product';
+import { ProductReference } from './product-reference';
 
 describe('ProductFamilySelection', () => {
   it('should raise ProductSelect', () => {
@@ -11,6 +14,11 @@ describe('ProductFamilySelection', () => {
     const triggeredEvent = productFamilySelection.execute(selectProductCommand);
 
     // Then
-    expect(triggeredEvent).toBe('ProductSelected');
+    const expectedEvent = new ProductSelected(
+      new Product(
+        new ProductReference('8380100'),
+      ),
+    );
+    expect(triggeredEvent).toStrictEqual(expectedEvent);
   });
 });
