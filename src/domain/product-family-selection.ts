@@ -3,6 +3,8 @@ import { ProductSelected } from './product-selected';
 import { Product } from './product';
 import { UnselectProduct } from './in/unselect-product';
 import { ProductUnselected } from './product-unselected';
+import { Confirm } from './confirm';
+import { ProductFamilyDefined } from './product-family-defined';
 
 export class ProductFamilySelection {
 
@@ -16,8 +18,17 @@ export class ProductFamilySelection {
 
   public unselect(unselectProductCommand: UnselectProduct) {
     const product = new Product(unselectProductCommand.reference);
-    this.products = this.products.filter(other => !other.equals(product));
-    return new ProductUnselected(product);
+
+    if (this.products.some(other => other.equals(product))) {
+      this.products = this.products.filter(other => !other.equals(product));
+      return new ProductUnselected(product);
+    }
+  }
+
+  public confirm() {
+    if (this.products.length) {
+      return new ProductFamilyDefined(this.products);
+    }
   }
 
 }
