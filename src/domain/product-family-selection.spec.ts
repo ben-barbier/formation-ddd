@@ -1,10 +1,10 @@
-import { SelectProduct } from './in/select-product';
+import { SelectProduct } from './commands/select-product';
 import { ProductFamilySelection } from './product-family-selection';
-import { ProductSelected } from './product-selected';
+import { ProductSelected } from './events/product-selected';
 import { ProductReference } from './product-reference';
-import { UnselectProduct } from './in/unselect-product';
-import { ProductUnselected } from './product-unselected';
-import { ProductFamilyDefined } from './product-family-defined';
+import { UnselectProduct } from './commands/unselect-product';
+import { ProductUnselected } from './events/product-unselected';
+import { ProductFamilyDefined } from './events/product-family-defined';
 
 describe('ProductFamilySelection', () => {
   it('should raise ProductSelected', () => {
@@ -72,6 +72,28 @@ describe('ProductFamilySelection', () => {
 
     // Then
     expect(triggeredEvent).toBeUndefined();
+  });
+
+  it('sould replay events', () => {
+    // Given
+    const events = [
+      new ProductSelected(new ProductReference('8380101')),
+      new ProductSelected(new ProductReference('8380102')),
+      new ProductSelected(new ProductReference('8380103')),
+      new ProductUnselected(new ProductReference('8380102')),
+      new ProductUnselected(new ProductReference('8380104')),
+    ];
+
+    // When
+    const productFamilySelection = new ProductFamilySelection(events);
+    const productFamilyDefined = productFamilySelection.confirm();
+
+    // Then
+    expect(productFamilyDefined.references).toStrictEqual([
+      new ProductReference('8380101'),
+      new ProductReference('8380103'),
+    ]);
+
   });
 
 });
