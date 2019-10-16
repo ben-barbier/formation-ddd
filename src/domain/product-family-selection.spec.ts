@@ -7,7 +7,7 @@ import { ProductReference } from './product-reference';
 describe('ProductFamilySelection', () => {
   it('should raise ProductSelect', () => {
     // Given
-    const selectProductCommand = new SelectProduct();
+    const selectProductCommand = new SelectProduct(new ProductReference('8380101'));
     const productFamilySelection = new ProductFamilySelection();
 
     // When
@@ -15,9 +15,7 @@ describe('ProductFamilySelection', () => {
 
     // Then
     const expectedEvent = new ProductSelected(
-      new Product(
-        new ProductReference('8380100'),
-      ),
+      new Product(selectProductCommand.reference),
     );
     expect(triggeredEvent).toStrictEqual(expectedEvent);
   });
