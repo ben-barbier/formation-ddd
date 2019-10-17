@@ -4,9 +4,10 @@ import { ProductUnselected } from '../domain/events/product-unselected';
 import { ProductFamilyDefined } from '../domain/events/product-family-defined';
 import { FamilyId } from '../domain/family-id';
 import { FamilyNotConfirmedRepository } from './family-not-confirmed-repository';
+import { ProductFamilySelectionEventHandler } from './product-family-selection-event-handler';
 
 // event handler
-export class ProductFamilySelectionNotDefinedHandler {
+export class ProductFamilySelectionNotDefinedHandler implements ProductFamilySelectionEventHandler {
 
   constructor(private repository: FamilyNotConfirmedRepository) {
   }
