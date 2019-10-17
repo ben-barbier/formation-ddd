@@ -7,6 +7,7 @@ import { ProductReference } from '../domain/product-reference';
 import { ProductUnselected } from '../domain/events/product-unselected';
 import { Confirm } from '../domain/commands/confirm';
 import { ProductFamilyDefined } from '../domain/events/product-family-defined';
+import { SequenceAlreadyExists } from './SequenceAlreadyExists';
 
 export class FileStoredProductFamilySelectionEventStore implements ProductFamilySelectionEventStore {
 
@@ -16,14 +17,13 @@ export class FileStoredProductFamilySelectionEventStore implements ProductFamily
     }
   }
 
-  public store(events: ProductFamilySelectionEvent[]) {
-    fs.appendFileSync(this.filePath, events
-      .map(e => ({
-        event: e.constructor.name,
-        payload: e,
-      }))
-      .map(raw => JSON.stringify(raw) + '\n'),
-    );
+  public store(familyId: FamilyId, sequence: number, events: ProductFamilySelectionEvent[]) {
+    const history = this.getHistory(familyId);
+    if (history.length === sequence) {
+      this.persistEvents(events);
+      return;
+    }
+    throw new SequenceAlreadyExists();
   }
 
   public getHistory(familyId?: FamilyId): ProductFamilySelectionEvent[] {
@@ -32,6 +32,16 @@ export class FileStoredProductFamilySelectionEventStore implements ProductFamily
       return events.filter(e => e.familyId.equals(familyId));
     }
     return events;
+  }
+
+  private persistEvents(events: ProductFamilySelectionEvent[]) {
+    fs.appendFileSync(this.filePath, events
+      .map(e => ({
+        event: e.constructor.name,
+        payload: e,
+      }))
+      .map(raw => JSON.stringify(raw) + '\n'),
+    );
   }
 
   private parseEvents(): ProductFamilySelectionEvent[] {

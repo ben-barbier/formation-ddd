@@ -19,18 +19,17 @@ describe('Projection', () => {
     const handler = new ProductFamilySelectionNotDefinedEventHandler(projectionRepository);
     const eventStore = new InMemoryProductFamilySelectionEventStore();
     const pubsub = new ProductFamilySelectionPubsub(eventStore, [handler]);
-    const events = select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1')));
 
     // When/Then
     expect(projectionRepository.count(family)).toBe(0);
 
-    pubsub.receive(events);
+    pubsub.receive(family, eventStore.getHistory(family).length, select(eventStore.getHistory(family), new SelectProduct(family, new ProductReference('1'))));
     expect(projectionRepository.count(family)).toBe(1);
 
-    pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
+    pubsub.receive(family, eventStore.getHistory(family).length, select(eventStore.getHistory(family), new SelectProduct(family, new ProductReference('1'))));
     expect(projectionRepository.count(family)).toBe(1);
 
-    pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('2'))));
+    pubsub.receive(family, eventStore.getHistory(family).length, select(eventStore.getHistory(family), new SelectProduct(family, new ProductReference('2'))));
     expect(projectionRepository.count(family)).toBe(2);
   });
 
@@ -45,14 +44,13 @@ describe('Event store', () => {
     const handler = new InfectedProductFamilySelectionEventHandler(projectionRepository);
     const eventStore = new InMemoryProductFamilySelectionEventStore();
     const pubsub = new ProductFamilySelectionPubsub(eventStore, [handler]);
-    const events = select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1')));
 
     // When/Then
-    pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
-    pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
-    pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('2'))));
+    pubsub.receive(family, eventStore.getHistory(family).length, select(eventStore.getHistory(family), new SelectProduct(family, new ProductReference('1'))));
+    pubsub.receive(family, eventStore.getHistory(family).length, select(eventStore.getHistory(family), new SelectProduct(family, new ProductReference('1'))));
+    pubsub.receive(family, eventStore.getHistory(family).length, select(eventStore.getHistory(family), new SelectProduct(family, new ProductReference('2'))));
 
-    expect(eventStore.getHistory()).toEqual([
+    expect(eventStore.getHistory(family)).toEqual([
       new ProductSelected(family, new ProductReference('2')),
       new ProductSelected(family, new ProductReference('1')),
     ]);
@@ -72,12 +70,11 @@ describe('FS Event store', () => {
     const handler = new InfectedProductFamilySelectionEventHandler(projectionRepository);
     const eventStore = new FileStoredProductFamilySelectionEventStore('./eventStore.txt');
     const pubsub = new ProductFamilySelectionPubsub(eventStore, [handler]);
-    const events = select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1')));
 
     // When/Then
-    pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
-    pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
-    pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('2'))));
+    pubsub.receive(family, eventStore.getHistory(family).length, select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
+    pubsub.receive(family, eventStore.getHistory(family).length, select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
+    pubsub.receive(family, eventStore.getHistory(family).length, select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('2'))));
 
     const expectedEvents = [
       new ProductSelected(family, new ProductReference('2')),

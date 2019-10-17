@@ -3,7 +3,7 @@ import { FamilyId } from '../domain/family-id';
 
 export interface ProductFamilySelectionEventStore {
 
-  store(events: ProductFamilySelectionEvent[]): void;
+  store(familyId: FamilyId, sequence: number, events: ProductFamilySelectionEvent[]): void;
 
   getHistory(familyId?: FamilyId): ProductFamilySelectionEvent[];
 
