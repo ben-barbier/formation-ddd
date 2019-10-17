@@ -4,9 +4,9 @@ import { ProductFamilySelectionEventHandler } from './product-family-selection-e
 
 export class ProductFamilySelectionPubsub {
 
-  public eventStore: ProductFamilySelectionEventStore = new ProductFamilySelectionEventStore();
-
-  constructor(public handlers: ProductFamilySelectionEventHandler[]) {}
+  constructor(private eventStore: ProductFamilySelectionEventStore,
+              private handlers: ProductFamilySelectionEventHandler[]) {
+  }
 
   public receive(events: ProductFamilySelectionEvent[]) {
     this.eventStore.store(events);

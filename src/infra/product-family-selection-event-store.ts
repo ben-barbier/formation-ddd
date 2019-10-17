@@ -1,11 +1,9 @@
 import { ProductFamilySelectionEvent } from '../domain/events/product-family-selection-event';
 
-export class ProductFamilySelectionEventStore {
+export interface ProductFamilySelectionEventStore {
 
-  private events: ProductFamilySelectionEvent[] = [];
+  store(events: ProductFamilySelectionEvent[]): void;
 
-  public store(events: ProductFamilySelectionEvent[]) {
-    this.events = events.concat(this.events);
-  }
+  getHistory(): ProductFamilySelectionEvent[];
 
 }

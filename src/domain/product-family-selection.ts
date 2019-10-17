@@ -8,7 +8,12 @@ import { ProductFamilySelectionEvent } from './events/product-family-selection-e
 import { Confirm } from './commands/confirm';
 
 export function select(history: ProductFamilySelectionEvent[], command: SelectProduct): ProductFamilySelectionEvent[] {
-  return [new ProductSelected(command.familyId, command.reference)];
+  const events = [];
+  const reference = command.reference;
+  if (!new DecisionProjection(history).hasAlreadySelected(reference)) {
+    events.push(new ProductSelected(command.familyId, reference));
+  }
+  return events;
 }
 
 export const unselect = (history: ProductFamilySelectionEvent[]) => (command: UnselectProduct): ProductFamilySelectionEvent[] => {
