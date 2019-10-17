@@ -5,19 +5,21 @@ import { ProductFamilySelectionNotDefined } from './product-family-selection-not
 import { ProductUnselected } from '../domain/events/product-unselected';
 import { ProductFamilyDefined } from '../domain/events/product-family-defined';
 import { InMemoryFamilyNotConfirmedRepository } from './in-memory-family-not-confirmed-repository';
+import { ProductFamilySelectionNotDefinedHandler } from './product-family-selection-not-defined-handler';
 
 describe('FamilyList', () => {
   it('When receive ProductSelected, my handler should increment counter', () => {
     // Given
     const family = new FamilyId('FamilleA');
     const productSelected = new ProductSelected(family, new ProductReference('8380101'));
-    const familyCounters = new ProductFamilySelectionNotDefined(new InMemoryFamilyNotConfirmedRepository());
+    const repository = new InMemoryFamilyNotConfirmedRepository();
+    const handler = new ProductFamilySelectionNotDefinedHandler(repository);
 
     // When
-    familyCounters.listen(productSelected);
+    handler.listen(productSelected);
 
     // Then
-    expect(familyCounters.count(family)).toBe(1);
+    expect(repository.count(family)).toBe(1);
   });
 
   it('When receive ProductUnselected, my handler should decrement counter', () => {
@@ -25,28 +27,31 @@ describe('FamilyList', () => {
     const productReferences = ['1', '2', '3', '4', '5'];
 
     const family = new FamilyId('FamilleA');
-    const familyCounters = new ProductFamilySelectionNotDefined(new InMemoryFamilyNotConfirmedRepository());
+
+    const repository = new InMemoryFamilyNotConfirmedRepository();
+    const handler = new ProductFamilySelectionNotDefinedHandler(repository);
     const productsSelected = productReferences.map(id => new ProductSelected(family, new ProductReference(id)));
-    productsSelected.forEach(productSelected => familyCounters.listen(productSelected));
+    productsSelected.forEach(productSelected => handler.listen(productSelected));
 
     const productUnselected = new ProductUnselected(
       family,
       new ProductReference('1'),
     );
     // When
-    familyCounters.listen(productUnselected);
+    handler.listen(productUnselected);
 
     // Then
-    expect(familyCounters.count(family)).toBe(4);
+    expect(repository.count(family)).toBe(4);
   });
 
   it('When receive ProductsFamilyDefines, my handler should remove projection', () => {
     // Given
     const family = new FamilyId('FamilleA');
-    const familyCounters = new ProductFamilySelectionNotDefined(new InMemoryFamilyNotConfirmedRepository());
+    const repository = new InMemoryFamilyNotConfirmedRepository();
+    const handler = new ProductFamilySelectionNotDefinedHandler(repository);
     const productReferences = ['1', '2', '3', '4', '5'];
     const productsSelected = productReferences.map(id => new ProductSelected(family, new ProductReference(id)));
-    productsSelected.forEach(productSelected => familyCounters.listen(productSelected));
+    productsSelected.forEach(productSelected => handler.listen(productSelected));
 
     const productFamilyDefined = new ProductFamilyDefined(family, [
       new ProductReference('1'),
@@ -57,9 +62,9 @@ describe('FamilyList', () => {
     ]);
 
     // When
-    familyCounters.listen(productFamilyDefined);
+    handler.listen(productFamilyDefined);
 
     // Then
-    expect(familyCounters.count(family)).toBe(0);
+    expect(repository.getAll()).toHaveLength(0);
   });
 });
