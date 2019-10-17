@@ -1,7 +1,6 @@
 import { ProductSelected } from '../domain/events/product-selected';
 import { ProductReference } from '../domain/product-reference';
 import { FamilyId } from '../domain/family-id';
-import { ProductFamilySelectionNotDefined } from './product-family-selection-not-defined';
 import { ProductUnselected } from '../domain/events/product-unselected';
 import { ProductFamilyDefined } from '../domain/events/product-family-defined';
 import { InMemoryFamilyNotConfirmedRepository } from './in-memory-family-not-confirmed-repository';

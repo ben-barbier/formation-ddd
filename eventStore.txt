@@ -1,0 +1,2 @@
+{"event":"ProductSelected","payload":{"familyId":{"id":"FamilleA"},"reference":{"value":"1"}}}
+{"event":"ProductSelected","payload":{"familyId":{"id":"FamilleA"},"reference":{"value":"2"}}}
