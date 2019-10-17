@@ -26,7 +26,15 @@ export class FileStoredProductFamilySelectionEventStore implements ProductFamily
     );
   }
 
-  public getHistory(): ProductFamilySelectionEvent[] {
+  public getHistory(familyId?: FamilyId): ProductFamilySelectionEvent[] {
+    const events = this.parseEvents();
+    if (familyId) {
+      return events.filter(e => e.familyId.equals(familyId));
+    }
+    return events;
+  }
+
+  private parseEvents(): ProductFamilySelectionEvent[] {
     return fs.readFileSync(this.filePath).toString()
       .split('\n')
       .filter(Boolean)

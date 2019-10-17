@@ -48,7 +48,6 @@ describe('Event store', () => {
     const events = select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1')));
 
     // When/Then
-
     pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
     pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
     pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('2'))));
@@ -76,7 +75,6 @@ describe('FS Event store', () => {
     const events = select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1')));
 
     // When/Then
-
     pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
     pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
     pubsub.receive(select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('2'))));
@@ -87,7 +85,7 @@ describe('FS Event store', () => {
     ];
 
     expectedEvents.forEach(expectedEvent => {
-      expect(eventStore.getHistory()).toContainEqual(expectedEvent);
+      expect(eventStore.getHistory(family)).toContainEqual(expectedEvent);
     });
 
     // Because of infected event handler, projection is not up to date
