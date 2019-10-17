@@ -7,20 +7,13 @@ import { FamilyNotConfirmedRepository } from './family-not-confirmed-repository'
 import { ProductFamilySelectionEventHandler } from './product-family-selection-event-handler';
 
 // event handler
-export class ProductFamilySelectionNotDefinedHandler implements ProductFamilySelectionEventHandler {
+export class InfectedProductFamilySelectionEventHandler implements ProductFamilySelectionEventHandler {
 
   constructor(private repository: FamilyNotConfirmedRepository) {
   }
 
   public listen(event: ProductFamilySelectionEvent) {
-    const familyId = event.familyId;
-    if (event instanceof ProductSelected) {
-      this.repository.increment(familyId);
-    } else if (event instanceof ProductUnselected) {
-      this.repository.decrement(familyId);
-    } else if (event instanceof ProductFamilyDefined) {
-      this.repository.remove(familyId);
-    }
+    // Infected
   }
 
 }

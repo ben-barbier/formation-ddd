@@ -5,7 +5,7 @@ import { ProductFamilySelectionNotDefined } from './product-family-selection-not
 import { ProductUnselected } from '../domain/events/product-unselected';
 import { ProductFamilyDefined } from '../domain/events/product-family-defined';
 import { InMemoryFamilyNotConfirmedRepository } from './in-memory-family-not-confirmed-repository';
-import { ProductFamilySelectionNotDefinedHandler } from './product-family-selection-not-defined-handler';
+import { ProductFamilySelectionNotDefinedEventHandler } from './product-family-selection-not-defined-event-handler';
 
 describe('FamilyList', () => {
   it('When receive ProductSelected, my handler should increment counter', () => {
@@ -13,7 +13,7 @@ describe('FamilyList', () => {
     const family = new FamilyId('FamilleA');
     const productSelected = new ProductSelected(family, new ProductReference('8380101'));
     const repository = new InMemoryFamilyNotConfirmedRepository();
-    const handler = new ProductFamilySelectionNotDefinedHandler(repository);
+    const handler = new ProductFamilySelectionNotDefinedEventHandler(repository);
 
     // When
     handler.listen(productSelected);
@@ -29,7 +29,7 @@ describe('FamilyList', () => {
     const family = new FamilyId('FamilleA');
 
     const repository = new InMemoryFamilyNotConfirmedRepository();
-    const handler = new ProductFamilySelectionNotDefinedHandler(repository);
+    const handler = new ProductFamilySelectionNotDefinedEventHandler(repository);
     const productsSelected = productReferences.map(id => new ProductSelected(family, new ProductReference(id)));
     productsSelected.forEach(productSelected => handler.listen(productSelected));
 
@@ -48,7 +48,7 @@ describe('FamilyList', () => {
     // Given
     const family = new FamilyId('FamilleA');
     const repository = new InMemoryFamilyNotConfirmedRepository();
-    const handler = new ProductFamilySelectionNotDefinedHandler(repository);
+    const handler = new ProductFamilySelectionNotDefinedEventHandler(repository);
     const productReferences = ['1', '2', '3', '4', '5'];
     const productsSelected = productReferences.map(id => new ProductSelected(family, new ProductReference(id)));
     productsSelected.forEach(productSelected => handler.listen(productSelected));
