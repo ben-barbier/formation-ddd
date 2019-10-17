@@ -1,6 +1,6 @@
-import { ProductFamilySelectionEvent } from '../domain/events/product-family-selection-event';
+import { ProductFamilySelectionEvent } from '../../domain/events/product-family-selection-event';
 import { ProductFamilySelectionEventStore } from './product-family-selection-event-store';
-import { FamilyId } from '../domain/family-id';
+import { FamilyId } from '../../domain/family-id';
 import { SequenceAlreadyExists } from './SequenceAlreadyExists';
 
 export class InMemoryProductFamilySelectionEventStore implements ProductFamilySelectionEventStore {

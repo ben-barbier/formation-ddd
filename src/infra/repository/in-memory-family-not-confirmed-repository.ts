@@ -1,6 +1,6 @@
-import { FamilyId } from '../domain/family-id';
+import { FamilyId } from '../../domain/family-id';
 import { FamilyNotConfirmedRepository } from './family-not-confirmed-repository';
-import { ProductFamilySelectionNotDefined } from './product-family-selection-not-defined';
+import { ProductFamilySelectionNotDefined } from '../projection/product-family-selection-not-defined';
 
 export class InMemoryFamilyNotConfirmedRepository implements FamilyNotConfirmedRepository {
 

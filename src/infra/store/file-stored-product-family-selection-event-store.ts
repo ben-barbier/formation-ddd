@@ -1,12 +1,12 @@
-import { ProductFamilySelectionEvent } from '../domain/events/product-family-selection-event';
+import { ProductFamilySelectionEvent } from '../../domain/events/product-family-selection-event';
 import { ProductFamilySelectionEventStore } from './product-family-selection-event-store';
 import * as fs from 'fs';
-import { ProductSelected } from '../domain/events/product-selected';
-import { FamilyId } from '../domain/family-id';
-import { ProductReference } from '../domain/product-reference';
-import { ProductUnselected } from '../domain/events/product-unselected';
-import { Confirm } from '../domain/commands/confirm';
-import { ProductFamilyDefined } from '../domain/events/product-family-defined';
+import { ProductSelected } from '../../domain/events/product-selected';
+import { FamilyId } from '../../domain/family-id';
+import { ProductReference } from '../../domain/product-reference';
+import { ProductUnselected } from '../../domain/events/product-unselected';
+import { Confirm } from '../../domain/commands/confirm';
+import { ProductFamilyDefined } from '../../domain/events/product-family-defined';
 import { SequenceAlreadyExists } from './SequenceAlreadyExists';
 
 export class FileStoredProductFamilySelectionEventStore implements ProductFamilySelectionEventStore {

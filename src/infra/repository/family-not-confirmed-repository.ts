@@ -1,5 +1,5 @@
-import { FamilyId } from '../domain/family-id';
-import { ProductFamilySelectionNotDefined } from './product-family-selection-not-defined';
+import { FamilyId } from '../../domain/family-id';
+import { ProductFamilySelectionNotDefined } from '../projection/product-family-selection-not-defined';
 
 export interface FamilyNotConfirmedRepository {
 

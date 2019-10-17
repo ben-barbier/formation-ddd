@@ -55,12 +55,4 @@ class DecisionProjection {
   public hasAlreadySelected(reference: ProductReference) {
     return this.references.some(other => other.equals(reference));
   }
-
-  public applySelect(reference: ProductReference) {
-    this.internalReferences = [reference].concat(this.internalReferences);
-  }
-
-  public applyUnselect(reference: ProductReference) {
-    this.internalReferences = this.internalReferences.filter(other => !other.equals(reference));
-  }
 }

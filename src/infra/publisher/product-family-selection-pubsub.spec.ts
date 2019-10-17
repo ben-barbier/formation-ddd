@@ -1,14 +1,14 @@
-import { ProductReference } from '../domain/product-reference';
-import { FamilyId } from '../domain/family-id';
-import { InMemoryFamilyNotConfirmedRepository } from './in-memory-family-not-confirmed-repository';
-import { ProductFamilySelectionNotDefinedEventHandler } from './product-family-selection-not-defined-event-handler';
+import { ProductReference } from '../../domain/product-reference';
+import { FamilyId } from '../../domain/family-id';
+import { InMemoryFamilyNotConfirmedRepository } from '../repository/in-memory-family-not-confirmed-repository';
+import { ProductFamilySelectionNotDefinedEventHandler } from '../handler/product-family-selection-not-defined-event-handler';
 import { ProductFamilySelectionPubsub } from './product-family-selection-pubsub';
-import { select } from '../domain/product-family-selection';
-import { SelectProduct } from '../domain/commands/select-product';
-import { InMemoryProductFamilySelectionEventStore } from './in-memory-product-family-selection-event-store';
-import { ProductSelected } from '../domain/events/product-selected';
-import { InfectedProductFamilySelectionEventHandler } from './infected-product-family-selection-event-handler';
-import { FileStoredProductFamilySelectionEventStore } from './file-stored-product-family-selection-event-store';
+import { select } from '../../domain/product-family-selection';
+import { SelectProduct } from '../../domain/commands/select-product';
+import { InMemoryProductFamilySelectionEventStore } from '../store/in-memory-product-family-selection-event-store';
+import { ProductSelected } from '../../domain/events/product-selected';
+import { InfectedProductFamilySelectionEventHandler } from '../handler/infected-product-family-selection-event-handler';
+import { FileStoredProductFamilySelectionEventStore } from '../store/file-stored-product-family-selection-event-store';
 
 describe('Projection', () => {
 
@@ -72,6 +72,8 @@ describe('FS Event store', () => {
     const pubsub = new ProductFamilySelectionPubsub(eventStore, [handler]);
 
     // When/Then
+
+    // Historique pour chaque appel à sauvegarder
     pubsub.receive(family, eventStore.getHistory(family).length, select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
     pubsub.receive(family, eventStore.getHistory(family).length, select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('1'))));
     pubsub.receive(family, eventStore.getHistory(family).length, select(eventStore.getHistory(), new SelectProduct(family, new ProductReference('2'))));

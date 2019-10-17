@@ -1,10 +1,10 @@
-import { ProductSelected } from '../domain/events/product-selected';
-import { ProductReference } from '../domain/product-reference';
-import { FamilyId } from '../domain/family-id';
-import { ProductUnselected } from '../domain/events/product-unselected';
-import { ProductFamilyDefined } from '../domain/events/product-family-defined';
-import { InMemoryFamilyNotConfirmedRepository } from './in-memory-family-not-confirmed-repository';
-import { ProductFamilySelectionNotDefinedEventHandler } from './product-family-selection-not-defined-event-handler';
+import { ProductSelected } from '../../domain/events/product-selected';
+import { ProductReference } from '../../domain/product-reference';
+import { FamilyId } from '../../domain/family-id';
+import { ProductUnselected } from '../../domain/events/product-unselected';
+import { ProductFamilyDefined } from '../../domain/events/product-family-defined';
+import { InMemoryFamilyNotConfirmedRepository } from '../repository/in-memory-family-not-confirmed-repository';
+import { ProductFamilySelectionNotDefinedEventHandler } from '../handler/product-family-selection-not-defined-event-handler';
 
 describe('FamilyList', () => {
   it('When receive ProductSelected, my handler should increment counter', () => {
